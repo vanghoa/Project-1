@@ -4,6 +4,9 @@ var zTranslate;
 var d1;
 var dem = 0;
 var poX = 0;
+var check = true;
+var frame = 100;
+var move = frame;
 
 function setup() {
   let canvas = createCanvas(window.innerWidth-20, window.innerHeight-20, WEBGL);
@@ -23,6 +26,13 @@ function setup() {
   button2.position(width-150,40);
   button2.size(150,60);
   button2.mousePressed(Velaicainay);
+
+  let button3 = createButton('playvideo');
+  button3.position(width-150,80);
+  button3.size(150,60);
+  button3.mousePressed(Playvideo);
+
+  noLoop();
 }
 
 function Chuphinh() {
@@ -33,6 +43,12 @@ function Velaicainay() {
   noiseSeed(random(1,100))
   redraw(1);
 }
+
+function Playvideo() {
+  if (check) {loop(); check = false; }
+  else {noLoop(); check = true; }
+}
+
 
 function preload() {
   img = loadImage('cac-01.png');
@@ -53,7 +69,10 @@ function draw() {
   background(0);
   //ambientLight(150);
   
-  camera(-R*gridSz - 100 ,-R*gridSz - 100,-R*gridSz + 100,-R*gridSz+1500,-R*gridSz+1500,0,-1,-1,0).perspective(PI/3, width/height, 20, 20000);
+  move += frame;
+  console.log(frameRate());
+
+  camera(-R*gridSz - 100 ,-R*gridSz -100 + move,-R*gridSz + 100,-R*gridSz+1500,-R*gridSz+1500 + move,0,-1,-1,0).perspective(PI/3, width/height, 20, 20000);
   //camera(-1000,-1000,-2*R*gridSz + 3000,0,0,0,1,0,0);
   rotateX(0 //- sin(millis()*0.00001)
   );
@@ -95,18 +114,18 @@ function draw() {
                       let xgia;
                       if (count % 2 === 0) { xgia = x; } else { xgia = -x; }
 
-                      if (t >= 0.7) 
+                      if (t >= 0.55) 
                       {
                         translate(xgia, y, z);
                         sphere(gridSz/2,8,8); 
                       } 
                       else {
-                        xxoff +=0.0009;
+                        xxoff +=0.009;
                         let l = noise(xxoff);
                         if (l <= 0.4) {texture(img);}
                           else if (l >= 0.6) {texture(img2);}
                           else if (l <= 0.55 && l >= 0.45) {texture(img3);}
-                        translate(xgia, y, z*l*1.8);
+                        translate(xgia, y, z);
                         strokeWeight(1);
                         noStroke();
                         box(gridSz);
@@ -122,5 +141,5 @@ function draw() {
         }
   }
   pop();
-  noLoop();
+
 }
